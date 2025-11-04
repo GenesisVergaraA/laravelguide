@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía Laravel - CRUD Completo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Guía Laravel - CRUD Completo desde Cero</h1>
+            <p>Backend + Frontend Web + API REST + Validaciones</p>
+        </header>
+        <div class="content">
+            <div class="paso">
+                <span class="paso-num">1</span>
+                <h2>Crear Proyecto Laravel y Configurar BD</h2>
+                <h3>Con MYSQL</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">composer create-project laravel/laravel mi-biblioteca</span>
+<span class="command">cd mi-biblioteca</span>
+<span class="command">php artisan serve</span></pre>
+                </div>
+
+                <h3>Configurar Base de Datos</h3>
+                <div class="code">
+                    <span class="file-name">.env</span>
+                    <pre><span class="variable">DB_CONNECTION</span>=<span class="string">mysql</span>
+<span class="variable">DB_HOST</span>=<span class="string">127.0.0.1</span>
+<span class="variable">DB_PORT</span>=<span class="string">3306</span>
+<span class="variable">DB_DATABASE</span>=<span class="string">mi_biblioteca</span>
+<span class="variable">DB_USERNAME</span>=<span class="string">root</span>
+<span class="variable">DB_PASSWORD</span>=<span class="string"></span></pre>
+                </div>
+
+                <div class="nota">
+                    <strong>Nota:</strong> Inicia XAMP y crea la base de datos <code>mi_biblioteca</code> en MySQL antes
+                    de
+                    continuar.
+                </div>
+                <h3>Con sqlite</h3>
+                <h3>Configurar base de Datos</h3>
+                <div class="code">
+                    <span class="file-name">.env</span>
+                    <pre><span class="variable">DB_CONNECTION</span>=<span class="string">sqlite</span>
+<span class="comment">#DB_HOST</span>=<span class="string">127.0.0.1</span>
+<span class="comment">#DB_PORT</span>=<span class="string">3306</span>
+<span class="comment">#DB_DATABASE</span>=<span class="string">mi_biblioteca</span>
+<span class="comment">#DB_USERNAME</span>=<span class="string">root</span>
+<span class="comment">#DB_PASSWORD</span>=<span class="string"></span></pre>
+                </div>
+                <h3>Generar key</h3>
+                <div class="code">
+                    <span class="file-name">terminal</span>
+                    <pre><span class="command">php artisan key:generate</span></pre>
+                </div>
+
+            </div>
+            <div class="paso">
+                <span class="paso-num">2</span>
+                <h2>Crear Modelo y Migración</h2>
+
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan make:model Book -m</span></pre>
+                </div>
+
+                <h3>Definir la Migración</h3>
+                <p><strong>Archivo:</strong> database/migrations/xxxx_create_books_table.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">public function</span> <span class="function">up</span>()
+{
+    <span class="class">Schema</span>::<span class="function">create</span>(<span class="string">'books'</span>, <span class="keyword">function</span> (<span class="class">Blueprint</span> <span class="variable">$table</span>) {
+        <span class="variable">$table</span>-><span class="function">id</span>();
+        <span class="variable">$table</span>-><span class="function">string</span>(<span class="string">'title'</span>);
+        <span class="variable">$table</span>-><span class="function">string</span>(<span class="string">'author'</span>);
+        <span class="variable">$table</span>-><span class="function">integer</span>(<span class="string">'year_published'</span>);
+        <span class="variable">$table</span>-><span class="function">boolean</span>(<span class="string">'is_available'</span>)-><span class="function">default</span>(<span class="keyword">true</span>);
+        <span class="variable">$table</span>-><span class="function">timestamps</span>();
+    });
+}</pre>
+                </div>
+
+                <h3>Ejecutar la Migración</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan migrate</span></pre>
+                </div>
+            </div>
+
+            <div class="paso">
+                <span class="paso-num">3</span>
+                <h2>Configurar el Modelo</h2>
+                <p><strong>Archivo:</strong> app/Models/Book.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">namespace</span> <span class="class">App\Models</span>;
+
+<span class="keyword">use</span> <span class="class">Illuminate\Database\Eloquent\Model</span>;
+
+<span class="keyword">class</span> <span class="class">Book</span> <span class="keyword">extends</span> <span class="class">Model</span>
+{
+    <span class="keyword">protected</span> <span class="variable">$fillable</span> = [
+        <span class="string">'title'</span>, 
+        <span class="string">'author'</span>, 
+        <span class="string">'year_published'</span>, 
+        <span class="string">'is_available'</span>
+    ];
+    
+    <span class="keyword">protected</span> <span class="variable">$casts</span> = [
+        <span class="string">'is_available'</span> => <span class="string">'boolean'</span>,
+        <span class="string">'year_published'</span> => <span class="string">'integer'</span>
+    ];
+}</pre>
+                </div>
+            </div>
+
+            <div class="paso">
+                <span class="paso-num">4</span>
+                <h2>Crear Controlador Web</h2>
+
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan make:controller BookWebController --resource</span></pre>
+                </div>
+
+                <p><strong>Archivo:</strong> app/Http/Controllers/BookWebController.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">namespace</span> <span class="class">App\Http\Controllers</span>;
+
+<span class="keyword">use</span> <span class="class">App\Models\Book</span>;
+<span class="keyword">use</span> <span class="class">Illuminate\Http\Request</span>;
+
+<span class="keyword">class</span> <span class="class">BookWebController</span> <span class="keyword">extends</span> <span class="class">Controller</span>
+{
+    <span class="keyword">public function</span> <span class="function">index</span>()
+    {
+        <span class="variable">$books</span> = <span class="class">Book</span>::<span class="function">all</span>();
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.index'</span>, <span class="function">compact</span>(<span class="string">'books'</span>));
+    }
+
+    <span class="keyword">public function</span> <span class="function">create</span>()
+    {
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.create'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">store</span>(<span class="class">Request</span> <span class="variable">$request</span>)
+    {
+        <span class="variable">$data</span> = <span class="variable">$request</span>-><span class="function">validate</span>([
+            <span class="string">'title'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'year_published'</span> => <span class="string">'required|integer|min:1900|max:2024'</span>
+        ]);
+
+        <span class="class">Book</span>::<span class="function">create</span>(<span class="variable">$data</span>);
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro creado exitosamente!'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">edit</span>(<span class="variable">$id</span>)
+    {
+        <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">findOrFail</span>(<span class="variable">$id</span>);
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.edit'</span>, <span class="function">compact</span>(<span class="string">'book'</span>));
+    }
+
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="class">Request</span> <span class="variable">$request</span>, <span class="variable">$id</span>)
+    {
+        <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">findOrFail</span>(<span class="variable">$id</span>);
+        
+        <span class="variable">$data</span> = <span class="variable">$request</span>-><span class="function">validate</span>([
+            <span class="string">'title'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'required|string|max:255'</span>, 
+            <span class="string">'year_published'</span> => <span class="string">'required|integer|min:1900|max:2024'</span>
+        ]);
+
+        <span class="variable">$book</span>-><span class="function">update</span>(<span class="variable">$data</span>);
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro actualizado!'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">destroy</span>(<span class="variable">$id</span>)
+    {
+        <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">findOrFail</span>(<span class="variable">$id</span>);
+        <span class="variable">$book</span>-><span class="function">delete</span>();
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro eliminado!'</span>);
+    }
+}</pre>
+                </div>
+            </div>
+
+            <div class="paso">
+                <span class="paso-num">5</span>
+                <h2>Configurar Rutas Web</h2>
+                <p><strong>Archivo:</strong> routes/web.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">use</span> <span class="class">Illuminate\Support\Facades\Route</span>;
+<span class="keyword">use</span> <span class="class">App\Http\Controllers\BookWebController</span>;
+
+<span class="class">Route</span>::<span class="function">get</span>(<span class="string">'/'</span>, <span class="keyword">function</span> () {
+    <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>);
+});
+
+<span class="class">Route</span>::<span class="function">resource</span>(<span class="string">'books'</span>, <span class="class">BookWebController</span>::<span class="keyword">class</span>);</pre>
+                </div>
+            </div>
+
+            <div class="paso">
+    <span class="paso-num">6</span>
+    <h2>Crear Vistas Blade Completas</h2>
+
+    <h3>Layout Principal con Menú de Navegación</h3>
+    <p><strong>Archivo:</strong> resources/views/layouts/app.blade.php</p>
+
+    <div class="code">
+        <span class="file-name">Blade</span>
+        <pre><span class="tag">&lt;!DOCTYPE html&gt;</span>
+<span class="tag">&lt;html</span> <span class="attribute">lang</span>=<span class="string">"es"</span><span class="tag">&gt;</span>
+<span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">charset</span>=<span class="string">"UTF-8"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;meta</span> <span class="attribute">name</span>=<span class="string">"viewport"</span> <span class="attribute">content</span>=<span class="string">"width=device-width, initial-scale=1.0"</span><span class="tag">&gt;</span>
+    <span class="tag">&lt;title&gt;</span>@<span class="function">yield</span>(<span class="string">'title'</span>, <span class="string">'Biblioteca'</span>)<span class="tag">&lt;/title&gt;</span>
+    <span class="tag">&lt;style&gt;</span>
+        <span class="operator">*</span> { <span class="property">margin</span>: <span class="number">0</span>; <span class="property">padding</span>: <span class="number">0</span>; <span class="property">box-sizing</span>: border-box; }
+        <span class="property">body</span> { <span class="property">font-family</span>: Arial, sans-serif; <span class="property">background</span>: <span class="string">#f4f4f4</span>; }
+        <span class="property">.navbar</span> { <span class="property">background</span>: <span class="string">#2c3e50</span>; <span class="property">color</span>: white; <span class="property">padding</span>: <span class="number">1rem</span> <span class="number">2rem</span>; }
+        <span class="property">.nav-container</span> { <span class="property">max-width</span>: <span class="number">1200px</span>; <span class="property">margin</span>: <span class="number">0</span> auto; <span class="property">display</span>: flex; <span class="property">justify-content</span>: space-between; <span class="property">align-items</span>: center; }
+        <span class="property">.nav-links</span> { <span class="property">display</span>: flex; <span class="property">gap</span>: <span class="number">2rem</span>; }
+        <span class="property">.nav-links a</span> { <span class="property">color</span>: white; <span class="property">text-decoration</span>: none; <span class="property">padding</span>: <span class="number">0.5rem</span> <span class="number">1rem</span>; <span class="property">border-radius</span>: <span class="number">4px</span>; }
+        <span class="property">.nav-links a:hover</span> { <span class="property">background</span>: <span class="string">#34495e</span>; }
+        <span class="property">.container</span> { <span class="property">max-width</span>: <span class="number">1200px</span>; <span class="property">margin</span>: <span class="number">2rem</span> auto; <span class="property">background</span>: white; <span class="property">padding</span>: <span class="number">2rem</span>; <span class="property">border-radius</span>: <span class="number">8px</span>; }
+        <span class="property">.btn</span> { <span class="property">padding</span>: <span class="number">10px</span> <span class="number">15px</span>; <span class="property">text-decoration</span>: none; <span class="property">border-radius</span>: <span class="number">4px</span>; <span class="property">display</span>: inline-block; <span class="property">border</span>: none; <span class="property">cursor</span>: pointer; }
+        <span class="property">.btn-primary</span> { <span class="property">background</span>: <span class="string">#3498db</span>; <span class="property">color</span>: white; }
+        <span class="property">.btn-danger</span> { <span class="property">background</span>: <span class="string">#e74c3c</span>; <span class="property">color</span>: white; }
+        <span class="property">.btn-success</span> { <span class="property">background</span>: <span class="string">#27ae60</span>; <span class="property">color</span>: white; }
+        <span class="property">.alert</span> { <span class="property">padding</span>: <span class="number">15px</span>; <span class="property">margin</span>: <span class="number">15px</span> <span class="number">0</span>; <span class="property">border-radius</span>: <span class="number">4px</span>; }
+        <span class="property">.alert-success</span> { <span class="property">background</span>: <span class="string">#d4edda</span>; <span class="property">color</span>: <span class="string">#155724</span>; <span class="property">border</span>: <span class="number">1px</span> solid <span class="string">#c3e6cb</span>; }
+        <span class="property">table</span> { <span class="property">width</span>: <span class="number">100%</span>; <span class="property">border-collapse</span>: collapse; <span class="property">margin</span>: <span class="number">20px</span> <span class="number">0</span>; }
+        <span class="property">th</span>, <span class="property">td</span> { <span class="property">padding</span>: <span class="number">12px</span>; <span class="property">text-align</span>: left; <span class="property">border-bottom</span>: <span class="number">1px</span> solid <span class="string">#ddd</span>; }
+        <span class="property">th</span> { <span class="property">background</span>: <span class="string">#34495e</span>; <span class="property">color</span>: white; }
+        <span class="property">tr:hover</span> { <span class="property">background</span>: <span class="string">#f5f5f5</span>; }
+        <span class="property">.form-group</span> { <span class="property">margin-bottom</span>: <span class="number">1rem</span>; }
+        <span class="property">.form-group label</span> { <span class="property">display</span>: block; <span class="property">margin-bottom</span>: <span class="number">0.5rem</span>; <span class="property">font-weight</span>: bold; }
+        <span class="property">.form-group input</span>, <span class="property">.form-group textarea</span> { <span class="property">width</span>: <span class="number">100%</span>; <span class="property">padding</span>: <span class="number">0.5rem</span>; <span class="property">border</span>: <span class="number">1px</span> solid <span class="string">#ddd</span>; <span class="property">border-radius</span>: <span class="number">4px</span>; }
+        <span class="property">.form-actions</span> { <span class="property">display</span>: flex; <span class="property">gap</span>: <span class="number">1rem</span>; <span class="property">margin-top</span>: <span class="number">1.5rem</span>; }
+    <span class="tag">&lt;/style&gt;</span>
+<span class="tag">&lt;/head&gt;</span>
+<span class="tag">&lt;body&gt;</span>
+    <span class="tag">&lt;nav</span> <span class="attribute">class</span>=<span class="string">"navbar"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"nav-container"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h1&gt;</span>📚 Biblioteca Virtual<span class="tag">&lt;/h1&gt;</span>
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"nav-links"</span><span class="tag">&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.index') }}"</span><span class="tag">&gt;</span>Lista de Libros<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.create') }}"</span><span class="tag">&gt;</span>Nuevo Libro<span class="tag">&lt;/a&gt;</span>
+                <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"http://localhost:8000/api/books"</span> <span class="attribute">target</span>=<span class="string">"_blank"</span><span class="tag">&gt;</span>API JSON<span class="tag">&lt;/a&gt;</span>
+            <span class="tag">&lt;/div&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/nav&gt;</span>
+
+    <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"container"</span><span class="tag">&gt;</span>
+        @<span class="keyword">if</span>(<span class="function">session</span>(<span class="string">'success'</span>))
+            <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"alert alert-success"</span><span class="tag">&gt;</span>
+                {{ <span class="function">session</span>(<span class="string">'success'</span>) }}
+            <span class="tag">&lt;/div&gt;</span>
+        @<span class="keyword">endif</span>
+        
+        @<span class="function">yield</span>(<span class="string">'content'</span>)
+    <span class="tag">&lt;/div&gt;</span>
+<span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre>
+    </div>
+
+    <h3>Vista Index (Listar Libros)</h3>
+    <p><strong>Archivo:</strong> resources/views/books/index.blade.php</p>
+
+    <div class="code">
+        <span class="file-name">Blade</span>
+        <pre>@<span class="function">extends</span>(<span class="string">'layouts.app'</span>)
+
+@<span class="function">section</span>(<span class="string">'title'</span>, <span class="string">'Lista de Libros'</span>)
+
+@<span class="function">section</span>(<span class="string">'content'</span>)
+    <span class="tag">&lt;div</span> <span class="attribute">style</span>=<span class="string">"display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;"</span><span class="tag">&gt;</span>
+        <span class="tag">&lt;h2&gt;</span>Listado de Libros<span class="tag">&lt;/h2&gt;</span>
+        <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.create') }}"</span> <span class="attribute">class</span>=<span class="string">"btn btn-primary"</span><span class="tag">&gt;</span>+ Nuevo Libro<span class="tag">&lt;/a&gt;</span>
+    <span class="tag">&lt;/div&gt;</span>
+
+    @<span class="keyword">if</span>(<span class="variable">$books</span>-&gt;<span class="function">count</span>() &gt; <span class="number">0</span>)
+        <span class="tag">&lt;table&gt;</span>
+            <span class="tag">&lt;thead&gt;</span>
+                <span class="tag">&lt;tr&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Título<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Autor<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Año<span class="tag">&lt;/th&gt;</span>
+                    <span class="tag">&lt;th&gt;</span>Acciones<span class="tag">&lt;/th&gt;</span>
+                <span class="tag">&lt;/tr&gt;</span>
+            <span class="tag">&lt;/thead&gt;</span>
+            <span class="tag">&lt;tbody&gt;</span>
+                @<span class="keyword">foreach</span>(<span class="variable">$books</span> <span class="keyword">as</span> <span class="variable">$book</span>)
+                <span class="tag">&lt;tr&gt;</span>
+                    <span class="tag">&lt;td&gt;</span>{{ <span class="variable">$book</span>-&gt;title }}<span class="tag">&lt;/td&gt;</span>
+                    <span class="tag">&lt;td&gt;</span>{{ <span class="variable">$book</span>-&gt;author }}<span class="tag">&lt;/td&gt;</span>
+                    <span class="tag">&lt;td&gt;</span>{{ <span class="variable">$book</span>-&gt;year }}<span class="tag">&lt;/td&gt;</span>
+                    <span class="tag">&lt;td&gt;</span>
+                        <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.edit', $book->id) }}"</span> <span class="attribute">class</span>=<span class="string">"btn btn-primary"</span><span class="tag">&gt;</span>Editar<span class="tag">&lt;/a&gt;</span>
+                        <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="string">"{{ route('books.destroy', $book->id) }}"</span> <span class="attribute">method</span>=<span class="string">"POST"</span> <span class="attribute">style</span>=<span class="string">"display: inline;"</span><span class="tag">&gt;</span>
+                            @<span class="function">csrf</span>
+                            @<span class="function">method</span>(<span class="string">'DELETE'</span>)
+                            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="string">"submit"</span> <span class="attribute">class</span>=<span class="string">"btn btn-danger"</span> <span class="attribute">onclick</span>=<span class="string">"return confirm('¿Eliminar este libro?')"</span><span class="tag">&gt;</span>Eliminar<span class="tag">&lt;/button&gt;</span>
+                        <span class="tag">&lt;/form&gt;</span>
+                    <span class="tag">&lt;/td&gt;</span>
+                <span class="tag">&lt;/tr&gt;</span>
+                @<span class="keyword">endforeach</span>
+            <span class="tag">&lt;/tbody&gt;</span>
+        <span class="tag">&lt;/table&gt;</span>
+    @<span class="keyword">else</span>
+        <span class="tag">&lt;div</span> <span class="attribute">style</span>=<span class="string">"text-align: center; padding: 2rem; color: #666;"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;h3&gt;</span>No hay libros registrados<span class="tag">&lt;/h3&gt;</span>
+            <span class="tag">&lt;p&gt;</span>Comienza agregando tu primer libro.<span class="tag">&lt;/p&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.create') }}"</span> <span class="attribute">class</span>=<span class="string">"btn btn-primary"</span><span class="tag">&gt;</span>Crear Primer Libro<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    @<span class="keyword">endif</span>
+@<span class="keyword">endsection</span></pre>
+    </div>
+
+    <h3>Vista Create (Crear Libro)</h3>
+    <p><strong>Archivo:</strong> resources/views/books/create.blade.php</p>
+
+    <div class="code">
+        <span class="file-name">Blade</span>
+        <pre>@<span class="function">extends</span>(<span class="string">'layouts.app'</span>)
+
+@<span class="function">section</span>(<span class="string">'title'</span>, <span class="string">'Crear Nuevo Libro'</span>)
+
+@<span class="function">section</span>(<span class="string">'content'</span>)
+    <span class="tag">&lt;h2&gt;</span>Crear Nuevo Libro<span class="tag">&lt;/h2&gt;</span>
+
+    <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="string">"{{ route('books.store') }}"</span> <span class="attribute">method</span>=<span class="string">"POST"</span><span class="tag">&gt;</span>
+        @<span class="function">csrf</span>
+        
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"title"</span><span class="tag">&gt;</span>Título:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"text"</span> <span class="attribute">name</span>=<span class="string">"title"</span> <span class="attribute">id</span>=<span class="string">"title"</span> <span class="attribute">value</span>=<span class="string">"{{ old('title') }}"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'title'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"author"</span><span class="tag">&gt;</span>Autor:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"text"</span> <span class="attribute">name</span>=<span class="string">"author"</span> <span class="attribute">id</span>=<span class="string">"author"</span> <span class="attribute">value</span>=<span class="string">"{{ old('author') }}"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'author'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"year"</span><span class="tag">&gt;</span>Año de Publicación:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"number"</span> <span class="attribute">name</span>=<span class="string">"year"</span> <span class="attribute">id</span>=<span class="string">"year"</span> <span class="attribute">value</span>=<span class="string">"{{ old('year') }}"</span> <span class="attribute">min</span>=<span class="string">"1900"</span> <span class="attribute">max</span>=<span class="string">"2024"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'year'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-actions"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="string">"submit"</span> <span class="attribute">class</span>=<span class="string">"btn btn-success"</span><span class="tag">&gt;</span>Guardar Libro<span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.index') }}"</span> <span class="attribute">class</span>=<span class="string">"btn"</span> <span class="attribute">style</span>=<span class="string">"background: #95a5a6; color: white;"</span><span class="tag">&gt;</span>Cancelar<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+@<span class="keyword">endsection</span></pre>
+    </div>
+
+    <h3>Vista Edit (Editar Libro)</h3>
+    <p><strong>Archivo:</strong> resources/views/books/edit.blade.php</p>
+
+    <div class="code">
+        <span class="file-name">Blade</span>
+        <pre>@<span class="function">extends</span>(<span class="string">'layouts.app'</span>)
+
+@<span class="function">section</span>(<span class="string">'title'</span>, <span class="string">'Editar Libro'</span>)
+
+@<span class="function">section</span>(<span class="string">'content'</span>)
+    <span class="tag">&lt;h2&gt;</span>Editar Libro<span class="tag">&lt;/h2&gt;</span>
+
+    <span class="tag">&lt;form</span> <span class="attribute">action</span>=<span class="string">"{{ route('books.update', $book->id) }}"</span> <span class="attribute">method</span>=<span class="string">"POST"</span><span class="tag">&gt;</span>
+        @<span class="function">csrf</span>
+        @<span class="function">method</span>(<span class="string">'PUT'</span>)
+        
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"title"</span><span class="tag">&gt;</span>Título:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"text"</span> <span class="attribute">name</span>=<span class="string">"title"</span> <span class="attribute">id</span>=<span class="string">"title"</span> <span class="attribute">value</span>=<span class="string">"{{ old('title', $book->title) }}"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'title'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"author"</span><span class="tag">&gt;</span>Autor:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"text"</span> <span class="attribute">name</span>=<span class="string">"author"</span> <span class="attribute">id</span>=<span class="string">"author"</span> <span class="attribute">value</span>=<span class="string">"{{ old('author', $book->author) }}"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'author'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-group"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;label</span> <span class="attribute">for</span>=<span class="string">"year"</span><span class="tag">&gt;</span>Año de Publicación:<span class="tag">&lt;/label&gt;</span>
+            <span class="tag">&lt;input</span> <span class="attribute">type</span>=<span class="string">"number"</span> <span class="attribute">name</span>=<span class="string">"year"</span> <span class="attribute">id</span>=<span class="string">"year"</span> <span class="attribute">value</span>=<span class="string">"{{ old('year', $book->year) }}"</span> <span class="attribute">min</span>=<span class="string">"1900"</span> <span class="attribute">max</span>=<span class="string">"2024"</span> <span class="attribute">required</span><span class="tag">&gt;</span>
+            @<span class="keyword">error</span>(<span class="string">'year'</span>)
+                <span class="tag">&lt;span</span> <span class="attribute">style</span>=<span class="string">"color: red; font-size: 0.9rem;"</span><span class="tag">&gt;</span>{{ <span class="variable">$message</span> }}<span class="tag">&lt;/span&gt;</span>
+            @<span class="keyword">enderror</span>
+        <span class="tag">&lt;/div&gt;</span>
+
+        <span class="tag">&lt;div</span> <span class="attribute">class</span>=<span class="string">"form-actions"</span><span class="tag">&gt;</span>
+            <span class="tag">&lt;button</span> <span class="attribute">type</span>=<span class="string">"submit"</span> <span class="attribute">class</span>=<span class="string">"btn btn-success"</span><span class="tag">&gt;</span>Actualizar Libro<span class="tag">&lt;/button&gt;</span>
+            <span class="tag">&lt;a</span> <span class="attribute">href</span>=<span class="string">"{{ route('books.index') }}"</span> <span class="attribute">class</span>=<span class="string">"btn"</span> <span class="attribute">style</span>=<span class="string">"background: #95a5a6; color: white;"</span><span class="tag">&gt;</span>Cancelar<span class="tag">&lt;/a&gt;</span>
+        <span class="tag">&lt;/div&gt;</span>
+    <span class="tag">&lt;/form&gt;</span>
+@<span class="keyword">endsection</span></pre>
+    </div>
+</div>
+            <div class="paso">
+                <span class="paso-num">7</span>
+                <h2>Configurar API REST</h2>
+
+                <h3>1. Crear Controlador API</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan make:controller Api/BookController --api</span></pre>
+                </div>
+
+                <p><strong>Archivo:</strong> app/Http/Controllers/Api/BookController.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">namespace</span> <span class="class">App\Http\Controllers\Api</span>;
+
+<span class="keyword">use</span> <span class="class">App\Http\Controllers\Controller</span>;
+<span class="keyword">use</span> <span class="class">App\Models\Book</span>;
+<span class="keyword">use</span> <span class="class">Illuminate\Http\Request</span>;
+<span class="keyword">use</span> <span class="class">Illuminate\Http\JsonResponse</span>;
+
+<span class="keyword">class</span> <span class="class">BookController</span> <span class="keyword">extends</span> <span class="class">Controller</span>
+{
+    <span class="comment">/**
+     * Display a listing of the resource.
+     */</span>
+    <span class="keyword">public function</span> <span class="function">index</span>(): <span class="class">JsonResponse</span>
+    {
+        <span class="variable">$books</span> = <span class="class">Book</span>::<span class="function">all</span>();
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>(<span class="variable">$books</span>);
+    }
+
+    <span class="comment">/**
+     * Store a newly created resource in storage.
+     */</span>
+    <span class="keyword">public function</span> <span class="function">store</span>(<span class="class">Request</span> <span class="variable">$request</span>): <span class="class">JsonResponse</span>
+    {
+        <span class="variable">$validated</span> = <span class="variable">$request</span>-><span class="function">validate</span>([
+            <span class="string">'title'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'year'</span> => <span class="string">'required|integer|min:1900|max:2024'</span>,
+        ]);
+
+        <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">create</span>(<span class="variable">$validated</span>);
+
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+            <span class="string">'message'</span> => <span class="string">'Book created successfully'</span>,
+            <span class="string">'book'</span> => <span class="variable">$book</span>
+        ], <span class="number">201</span>);
+    }
+
+    <span class="comment">/**
+     * Display the specified resource.
+     */</span>
+    <span class="keyword">public function</span> <span class="function">show</span>(<span class="class">Book</span> <span class="variable">$book</span>): <span class="class">JsonResponse</span>
+    {
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>(<span class="variable">$book</span>);
+    }
+
+    <span class="comment">/**
+     * Update the specified resource in storage.
+     */</span>
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="class">Request</span> <span class="variable">$request</span>, <span class="class">Book</span> <span class="variable">$book</span>): <span class="class">JsonResponse</span>
+    {
+        <span class="variable">$validated</span> = <span class="variable">$request</span>-><span class="function">validate</span>([
+            <span class="string">'title'</span> => <span class="string">'sometimes|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'sometimes|string|max:255'</span>,
+            <span class="string">'year'</span> => <span class="string">'sometimes|integer|min:1900|max:2024'</span>,
+        ]);
+
+        <span class="variable">$book</span>-><span class="function">update</span>(<span class="variable">$validated</span>);
+
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+            <span class="string">'message'</span> => <span class="string">'Book updated successfully'</span>,
+            <span class="string">'book'</span> => <span class="variable">$book</span>
+        ]);
+    }
+
+    <span class="comment">/**
+     * Remove the specified resource from storage.
+     */</span>
+    <span class="keyword">public function</span> <span class="function">destroy</span>(<span class="class">Book</span> <span class="variable">$book</span>): <span class="class">JsonResponse</span>
+    {
+        <span class="variable">$book</span>-><span class="function">delete</span>();
+
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+            <span class="string">'message'</span> => <span class="string">'Book deleted successfully'</span>
+        ]);
+    }
+}</pre>
+                </div>
+
+                <h3>2. Configurar Rutas API</h3>
+                <p><strong>Archivo:</strong> routes/api.php</p>
+
+                <div class="code">
+                    <span class="file-name">PHP</span>
+                    <pre><span class="keyword">use</span> <span class="class">Illuminate\Support\Facades\Route</span>;
+<span class="keyword">use</span> <span class="class">App\Http\Controllers\Api\BookController</span>;
+
+<span class="class">Route</span>::<span class="function">name</span>(<span class="string">'api.'</span>)-><span class="string">group(<span class="keyword">function()</span>){
+    <span class="class">Route</span>::<span class="function">apiResource</span>(<span class="string">'books'</span>, <span class="class">BookController</span>::<span class="keyword">class</span>);
+</span>
+});
+
+    </div>
+
+    <h3>3. Configurar Rutas Web (para comparación)</h3>
+    <p><strong>Archivo:</strong> routes/web.php</p>
+
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">use</span> <span class="class">Illuminate\Support\Facades\Route</span>;
+<span class="keyword">use</span> <span class="class">App\Http\Controllers\BookController</span>; <span class="comment">// Controlador web normal</span>
+
+<span class="class">Route</span>::<span class="function">get</span>(<span class="string">'/'</span>, <span class="keyword">function</span> () {
+    <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>);
+});
+
+<span class="class">Route</span>::<span class="function">resource</span>(<span class="string">'books'</span>, <span class="class">BookController</span>::<span class="keyword">class</span>);</pre>
+                </div>
+
+                <h3>4. Verificar Rutas Creadas</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan route:list</span>
+
+<span class="comment">#Se debería ver algo así:</span>
++-----------+--------------------------------+------------------------------------+
+| Method    | URI                            | Action                             |
++-----------+--------------------------------+------------------------------------+
+| GET|HEAD  | <span class="string">api/books</span>                      | Api\BookController@index           |
+| POST      | <span class="string">api/books</span>                      | Api\BookController@store           |
+| GET|HEAD  | <span class="string">api/books/{book}</span>               | Api\BookController@show            |
+| PUT|PATCH | <span class="string">api/books/{book}</span>               | Api\BookController@update          |
+| DELETE    | <span class="string">api/books/{book}</span>               | Api\BookController@destroy         |
+| GET|HEAD  | <span class="string">books</span>                          | BookController@index               |
+| GET|HEAD  | <span class="string">books/create</span>                   | BookController@create              |
+| POST      | <span class="string">books</span>                          | BookController@store               |
+| GET|HEAD  | <span class="string">books/{book}</span>                  | BookController@show                |
+| GET|HEAD  | <span class="string">books/{book}/edit</span>             | BookController@edit                |
+| PUT|PATCH | <span class="string">books/{book}</span>                  | BookController@update              |
+| DELETE    | <span class="string">books/{book}</span>                  | BookController@destroy             |
++-----------+--------------------------------+------------------------------------+</pre>
+                </div>
+
+                <div class="nota">
+                    <strong>Diferencias API vs Web:</strong><br>
+                    <strong>API</strong>: Usa <code>apiResource()</code> - No tiene <code>create</code> ni
+                    <code>edit</code><br>
+                    <strong>Web</strong>: Usa <code>resource()</code> - Tiene <code>create</code> y <code>edit</code>
+                    para formularios<br>
+                    <strong>API</strong>: Devuelve <code>JSON</code><br>
+                    <strong>Web</strong>: Devuelve <code>HTML/redirects</code>
+                </div>
+            </div>
+            <div class="paso">
+                <span class="paso-num">8</span>
+                <h2>Pruebas: API REST + Web</h2>
+
+                <h3>1. Iniciar el Servidor</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="command">php artisan serve</span>
+<span class="comment"># Servidor corriendo en: http://localhost:8000</span></pre>
+                </div>
+
+                <h3>2. Pruebar API REST (JSON)</h3>
+
+                <h4>Comandos cURL:</h4>
+                <div class="code">
+                    <span class="file-name">Terminal - cURL</span>
+                    <pre><span class="comment"># GET - Obtener todos los libros</span>
+<span class="command">curl -X GET http://localhost:8000/api/books</span>
+
+<span class="comment"># POST - Crear nuevo libro</span>
+<span class="command">curl -X POST http://localhost:8000/api/books \</span>
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json" \
+  -d '{"title":"Cien años de soledad","author":"Gabriel García Márquez","year":1967}'
+
+<span class="comment"># GET - Obtener libro específico</span>
+<span class="command">curl -X GET http://localhost:8000/api/books/1</span>
+
+<span class="comment"># PUT - Actualizar libro</span>
+<span class="command">curl -X PUT http://localhost:8000/api/books/1 \</span>
+  -H "Content-Type: application/json" \
+  -d '{"title":"Cien años - Edición Especial","author":"García Márquez","year":1967}'
+
+<span class="comment"># DELETE - Eliminar libro</span>
+<span class="command">curl -X DELETE http://localhost:8000/api/books/1</span></pre>
+                </div>
+
+                <h4>Configuración Postman:</h4>
+                <div class="code">
+                    <span class="file-name">Postman</span>
+                    <pre><span class="comment"># Headers para TODAS las requests API:</span>
+<span class="property">Content-Type</span>: <span class="string">application/json</span>
+<span class="property">Accept</span>: <span class="string">application/json</span>
+
+<span class="comment"># URLs para probar:</span>
+<span class="property">GET</span>    <span class="string">http://localhost:8000/api/books</span>
+<span class="property">POST</span>   <span class="string">http://localhost:8000/api/books</span>
+<span class="property">GET</span>    <span class="string">http://localhost:8000/api/books/1</span>
+<span class="property">PUT</span>    <span class="string">http://localhost:8000/api/books/1</span>
+<span class="property">DELETE</span> <span class="string">http://localhost:8000/api/books/1</span>
+
+<span class="comment"># Body ejemplo para POST/PUT (raw JSON):</span>
+{
+    <span class="string">"title"</span>: <span class="string">"El Quijote"</span>,
+    <span class="string">"author"</span>: <span class="string">"Miguel de Cervantes"</span>,
+    <span class="string">"year"</span>: <span class="number">1605</span>
+}</pre>
+                </div>
+
+                <h3>3. Pruebas Web</h3>
+                <div class="code">
+                    <span class="file-name">Navegador Web</span>
+                    <pre><span class="comment">#RUTAS WEB - Abrir en el navegador:</span>
+
+<span class="property">Lista de libros</span>: <span class="string">http://127.0.0.1:8000/books</span>
+<span class="property">Formulario crear</span>: <span class="string">http://127.0.0.1:8000/books/create</span>
+<span class="property">Formulario editar</span>: <span class="string">http://127.0.0.1:8000/books/1/edit</span>
+
+<span class="comment"># Acciones desde el navegador:</span>
+- Ver lista de libros (HTML)
+- Click "Nuevo Libro" → Formulario crear
+- Llenar formulario y enviar
+- Click "Editar" en cualquier libro
+- Click "Eliminar" en cualquier libro</pre>
+                </div>
+
+        </div>
+        <div class="paso">
+            <h1>Extras</h1>
+    <h2>Manejo de Errores en API</h2>
+
+    <h3>Respuestas 404 </h3>
+    <div class="code">
+        <span class="file-name">PHP - Manejo de errores</span>
+        <pre><span class="keyword">public function</span> <span class="function">show</span>(<span class="variable">$id</span>): <span class="class">JsonResponse</span>
+{
+    <span class="keyword">try</span> {
+        <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">findOrFail</span>(<span class="variable">$id</span>);
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>(<span class="variable">$book</span>);
+        
+    } <span class="keyword">catch</span> (<span class="class">ModelNotFoundException</span> <span class="variable">$e</span>) {
+        <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+            <span class="string">'message'</span> => <span class="string">'Book not found'</span>,
+            <span class="string">'error'</span> => <span class="string">'No book found with ID '</span> . <span class="variable">$id</span>
+        ], <span class="number">404</span>);
+    }
+}</pre>
+    </div>
+              <h3>Comandos Útiles</h3>
+                <div class="code">
+                    <span class="file-name">Terminal</span>
+                    <pre><span class="comment"># Ver todas las rutas disponibles</span>
+<span class="command">php artisan route:list</span>
+
+<span class="comment"># Limpiar cache (si hay problemas)</span>
+<span class="command">php artisan route:clear</span>
+<span class="command">php artisan config:clear</span>
+<span class="command">php artisan cache:clear</span>   
+</div>
+    
+</div>
+</body>
+
+</html>
