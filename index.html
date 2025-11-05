@@ -12,10 +12,22 @@
     <div class="container">
         <header>
             <h1>Guía Laravel - CRUD Completo desde Cero</h1>
-            <p>Backend + Frontend Web + API REST + Validaciones</p>
         </header>
+        <nav class="nav-fixed">
+                <ul>
+                    <li><a href="#paso-1">Paso 1</a></li>
+                    <li><a href="#paso-2">Paso 2</a></li>
+                    <li><a href="#paso-3">Paso 3</a></li>
+                    <li><a href="#paso-4">Paso 4</a></li>
+                    <li><a href="#paso-5">Paso 5</a></li>
+                    <li><a href="#paso-6">Paso 6</a></li>
+                    <li><a href="#paso-7">Paso 7</a></li>
+                    <li><a href="#paso-8">Paso 8</a></li>
+                    <li><a href="#extras">Extras</a></li>
+                </ul>
+        </nav>
         <div class="content">
-            <div class="paso">
+            <div class="paso" id="paso-1">
                 <span class="paso-num">1</span>
                 <h2>Crear Proyecto Laravel y Configurar BD</h2>
                 <h3>Con MYSQL</h3>
@@ -60,7 +72,7 @@
                 </div>
 
             </div>
-            <div class="paso">
+            <div class="paso" id="paso-2">
                 <span class="paso-num">2</span>
                 <h2>Crear Modelo y Migración</h2>
 
@@ -94,7 +106,7 @@
                 </div>
             </div>
 
-            <div class="paso">
+            <div class="paso" id="paso-3">
                 <span class="paso-num">3</span>
                 <h2>Configurar el Modelo</h2>
                 <p><strong>Archivo:</strong> app/Models/Book.php</p>
@@ -122,7 +134,7 @@
                 </div>
             </div>
 
-            <div class="paso">
+            <div class="paso" id="paso-4">
                 <span class="paso-num">4</span>
                 <h2>Crear Controlador Web</h2>
 
@@ -198,7 +210,7 @@
                 </div>
             </div>
 
-            <div class="paso">
+            <div class="paso" id="paso-5">
                 <span class="paso-num">5</span>
                 <h2>Configurar Rutas Web</h2>
                 <p><strong>Archivo:</strong> routes/web.php</p>
@@ -216,7 +228,7 @@
                 </div>
             </div>
 
-            <div class="paso">
+            <div class="paso" id="paso-6">
     <span class="paso-num">6</span>
     <h2>Crear Vistas Blade Completas</h2>
 
@@ -429,7 +441,7 @@
 @<span class="keyword">endsection</span></pre>
     </div>
 </div>
-            <div class="paso">
+            <div class="paso" id="paso-7">
                 <span class="paso-num">7</span>
                 <h2>Configurar API REST</h2>
 
@@ -529,7 +541,7 @@
                     <pre><span class="keyword">use</span> <span class="class">Illuminate\Support\Facades\Route</span>;
 <span class="keyword">use</span> <span class="class">App\Http\Controllers\Api\BookController</span>;
 
-<span class="class">Route</span>::<span class="function">name</span>(<span class="string">'api.'</span>)-><span class="string">group(<span class="keyword">function()</span>){
+<span class="class">Route</span>::<span class="function">name</span>(<span class="string">'api.'</span>)-><span class="string">group(<span class="keyword">function():</span>){
     <span class="class">Route</span>::<span class="function">apiResource</span>(<span class="string">'books'</span>, <span class="class">BookController</span>::<span class="keyword">class</span>);
 </span>
 });
@@ -555,24 +567,6 @@
                 <div class="code">
                     <span class="file-name">Terminal</span>
                     <pre><span class="command">php artisan route:list</span>
-
-<span class="comment">#Se debería ver algo así:</span>
-+-----------+--------------------------------+------------------------------------+
-| Method    | URI                            | Action                             |
-+-----------+--------------------------------+------------------------------------+
-| GET|HEAD  | <span class="string">api/books</span>                      | Api\BookController@index           |
-| POST      | <span class="string">api/books</span>                      | Api\BookController@store           |
-| GET|HEAD  | <span class="string">api/books/{book}</span>               | Api\BookController@show            |
-| PUT|PATCH | <span class="string">api/books/{book}</span>               | Api\BookController@update          |
-| DELETE    | <span class="string">api/books/{book}</span>               | Api\BookController@destroy         |
-| GET|HEAD  | <span class="string">books</span>                          | BookController@index               |
-| GET|HEAD  | <span class="string">books/create</span>                   | BookController@create              |
-| POST      | <span class="string">books</span>                          | BookController@store               |
-| GET|HEAD  | <span class="string">books/{book}</span>                  | BookController@show                |
-| GET|HEAD  | <span class="string">books/{book}/edit</span>             | BookController@edit                |
-| PUT|PATCH | <span class="string">books/{book}</span>                  | BookController@update              |
-| DELETE    | <span class="string">books/{book}</span>                  | BookController@destroy             |
-+-----------+--------------------------------+------------------------------------+</pre>
                 </div>
 
                 <div class="nota">
@@ -585,15 +579,14 @@
                     <strong>Web</strong>: Devuelve <code>HTML/redirects</code>
                 </div>
             </div>
-            <div class="paso">
+            <div class="paso" id="paso-8">
                 <span class="paso-num">8</span>
                 <h2>Pruebas: API REST + Web</h2>
 
                 <h3>1. Iniciar el Servidor</h3>
                 <div class="code">
                     <span class="file-name">Terminal</span>
-                    <pre><span class="command">php artisan serve</span>
-<span class="comment"># Servidor corriendo en: http://localhost:8000</span></pre>
+                    <pre><span class="command">php artisan serve</span></pre>
                 </div>
 
                 <h3>2. Pruebar API REST (JSON)</h3>
@@ -602,24 +595,24 @@
                 <div class="code">
                     <span class="file-name">Terminal - cURL</span>
                     <pre><span class="comment"># GET - Obtener todos los libros</span>
-<span class="command">curl -X GET http://localhost:8000/api/books</span>
+<span class="command">curl -X GET http://127.0.0.1:8000/api/books</span>
 
 <span class="comment"># POST - Crear nuevo libro</span>
-<span class="command">curl -X POST http://localhost:8000/api/books \</span>
+<span class="command">curl -X POST http://127.0.0.1:8000/api/books \</span>
   -H "Content-Type: application/json" \
   -H "Accept: application/json" \
-  -d '{"title":"Cien años de soledad","author":"Gabriel García Márquez","year":1967}'
+  -d '{"title":"Libro","author":"Autor","year":2025}'
 
 <span class="comment"># GET - Obtener libro específico</span>
-<span class="command">curl -X GET http://localhost:8000/api/books/1</span>
+<span class="command">curl -X GET http://127.0.0.1:8000/api/books/1</span>
 
 <span class="comment"># PUT - Actualizar libro</span>
-<span class="command">curl -X PUT http://localhost:8000/api/books/1 \</span>
+<span class="command">curl -X PUT http://127.0.0.1:8000/api/books/1 \</span>
   -H "Content-Type: application/json" \
   -d '{"title":"Cien años - Edición Especial","author":"García Márquez","year":1967}'
 
 <span class="comment"># DELETE - Eliminar libro</span>
-<span class="command">curl -X DELETE http://localhost:8000/api/books/1</span></pre>
+<span class="command">curl -X DELETE http://127.0.0.1:8000/api/books/1</span></pre>
                 </div>
 
                 <h4>Configuración Postman:</h4>
@@ -630,11 +623,11 @@
 <span class="property">Accept</span>: <span class="string">application/json</span>
 
 <span class="comment"># URLs para probar:</span>
-<span class="property">GET</span>    <span class="string">http://localhost:8000/api/books</span>
-<span class="property">POST</span>   <span class="string">http://localhost:8000/api/books</span>
-<span class="property">GET</span>    <span class="string">http://localhost:8000/api/books/1</span>
-<span class="property">PUT</span>    <span class="string">http://localhost:8000/api/books/1</span>
-<span class="property">DELETE</span> <span class="string">http://localhost:8000/api/books/1</span>
+<span class="property">GET</span>    <span class="string">http://127.0.0.1:8000/api/books</span>
+<span class="property">POST</span>   <span class="string">http://127.0.0.1:8000/api/books</span>
+<span class="property">GET</span>    <span class="string">http://127.0.0.1:8000/api/books/1</span>
+<span class="property">PUT</span>    <span class="string">http://127.0.0.1:8000/api/books/1</span>
+<span class="property">DELETE</span> <span class="string">http://127.0.0.1:8000/api/books/1</span>
 
 <span class="comment"># Body ejemplo para POST/PUT (raw JSON):</span>
 {
@@ -662,7 +655,7 @@
                 </div>
 
         </div>
-        <div class="paso">
+        <div class="paso" id="extras">
             <h1>Extras</h1>
     <h2>Manejo de Errores en API</h2>
 
@@ -693,8 +686,341 @@
 <span class="command">php artisan route:clear</span>
 <span class="command">php artisan config:clear</span>
 <span class="command">php artisan cache:clear</span>   
+
 </div>
+  <h2>Propiedades Adicionales Útiles para el Modelo</h2>
     
+    <p><strong>Archivo:</strong> app/Models/Book.php</p>
+
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">namespace</span> <span class="class">App\Models</span>;
+
+<span class="keyword">use</span> <span class="class">Illuminate\Database\Eloquent\Model</span>;
+
+<span class="keyword">class</span> <span class="class">Book</span> <span class="keyword">extends</span> <span class="class">Model</span>
+{
+    <span class="comment">//Perzonalizar tabla</span>
+    <span class="keyword">protected</span> <span class="variable">$table</span> = <span class="string">'mis_libros'</span>; <span class="comment">// Por defecto sería 'books'</span>
+
+    <span class="comment">//Clave primaria personalizada</span>
+    <span class="keyword">protected</span> <span class="variable">$primaryKey</span> = <span class="string">'book_id'</span>; <span class="comment">// Por defecto es 'id'</span>
+
+    <span class="comment">//No usar timestamps, si no se quiere created_at/updated_at</span>
+    <span class="keyword">public</span> <span class="variable">$timestamps</span> = <span class="keyword">false</span>; <span class="comment">// Por defecto es true</span>
+
+    <span class="comment">//Para claves no auto-incrementales</span>
+    <span class="keyword">public</span> <span class="variable">$incrementing</span> = <span class="keyword">false</span>; <span class="comment">// Para UUIDs o claves personalizadas</span>
+
+    <span class="comment">//Tipo de clave primaria</span>
+    <span class="keyword">protected</span> <span class="variable">$keyType</span> = <span class="string">'string'</span>; <span class="comment">// Para UUIDs, por defecto es 'int'</span>
+
+    <span class="comment">// Campos que se pueden llenar masivamente</span>
+    <span class="keyword">protected</span> <span class="variable">$fillable</span> = [
+        <span class="string">'title'</span>, 
+        <span class="string">'author'</span>, 
+        <span class="string">'year_published'</span>, 
+        <span class="string">'is_available'</span>,
+        <span class="string">'description'</span>,
+    ];
+
+    <span class="comment">//Conversión automática de tipos</span>
+    <span class="keyword">protected</span> <span class="variable">$casts</span> = [
+        <span class="string">'is_available'</span> => <span class="string">'boolean'</span>,      <span class="comment">// Convierte 0/1 a true/false</span>
+        <span class="string">'year_published'</span> => <span class="string">'integer'</span>,     <span class="comment">// Convierte string a int</span>
+        <span class="string">'pages'</span> => <span class="string">'integer'</span>,           <span class="comment">// Número de páginas como entero</span>
+        <span class="string">'price'</span> => <span class="string">'decimal:2'</span>,       <span class="comment">// Precio con 2 decimales</span>
+        <span class="string">'published_at'</span> => <span class="string">'datetime'</span>,     <span class="comment">// Convierte a objeto Carbon</span>
+        <span class="string">'metadata'</span> => <span class="string">'array'</span>,          <span class="comment">// Convierte JSON a array PHP</span>
+        <span class="string">'features'</span> => <span class="string">'object'</span>,         <span class="comment">// Convierte JSON a objeto PHP</span>
+    ];
+
+
+    <span class="comment">//Valores por defecto</span>
+    <span class="keyword">protected</span> <span class="variable">$attributes</span> = [
+        <span class="string">'is_available'</span> => <span class="keyword">true</span>,
+        <span class="string">'pages'</span> => <span class="number">0</span>,
+        <span class="string">'price'</span> => <span class="number">0.00</span>,
+    ];
+
+    <span class="comment">//Conexión personalizada, si se usa múltiples bases de datos</span>
+    <span class="keyword">protected</span> <span class="variable">$connection</span> = <span class="string">'mysql_secondary'</span>;
+
+    <span class="comment">//Alternativa a fillable (TODO excepto...)</span>
+    <span class="comment">// protected $guarded = ['id', 'created_at'];</span>
+
+    <span class="comment">//Campos que NO se incluyen en JSON</span>
+    <span class="keyword">protected</span> <span class="variable">$hidden</span> = [
+        <span class="string">'created_at'</span>,
+        <span class="string">'updated_at'</span>,
+        <span class="string">'pivot'</span>  <span class="comment">// Para relaciones muchos a muchos</span>
+    ];
+
+    <span class="comment">//Campos que SÍ se incluyen en JSON (alternativa a hidden)</span>
+    <span class="comment">// protected $visible = ['title', 'author', 'year_published'];</span>
+
+    <span class="comment">Campos calculados que se agregan al JSON</span>
+    <span class="keyword">protected</span> <span class="variable">$appends</span> = [
+        <span class="string">'publication_info'</span>,
+        <span class="string">'is_antique'</span>
+    ];
+
+    <span class="comment">//Métodos getters para campos calculados</span>
+    <span class="keyword">public function</span> <span class="function">getPublicationInfoAttribute</span>()
+    {
+        <span class="keyword">return</span> <span class="variable">$this</span>->title . <span class="string">' - '</span> . <span class="variable">$this</span>->author . <span class="string">' ('</span> . <span class="variable">$this</span>->year_published . <span class="string">')'</span>;
+    }
+
+    <span class="keyword">public function</span> <span class="function">getIsAntiqueAttribute</span>()
+    {
+        <span class="keyword">return</span> <span class="variable">$this</span>->year_published &lt; <span class="number">1900</span>;
+    }
+
+    <span class="comment">//Métodos setters para modificar datos al guardar</span>
+    <span class="keyword">public function</span> <span class="function">setTitleAttribute</span>(<span class="variable">$value</span>)
+    {
+        <span class="variable">$this</span>->attributes[<span class="string">'title'</span>] = <span class="function">ucfirst</span>(<span class="function">strtolower</span>(<span class="variable">$value</span>));
+    }
+
+    <span class="keyword">public function</span> <span class="function">setIsbnAttribute</span>(<span class="variable">$value</span>)
+    {
+        <span class="comment">// Eliminar guiones y espacios del ISBN</span>
+        <span class="variable">$this</span>->attributes[<span class="string">'isbn'</span>] = <span class="function">preg_replace</span>(<span class="string">'/[^0-9]/'</span>, <span class="string">''</span>, <span class="variable">$value</span>);
+    }
+
+    <span class="comment">//Filtros reutilizables</span>
+    <span class="keyword">public function</span> <span class="function">scopeAvailable</span>(<span class="variable">$query</span>)
+    {
+        <span class="keyword">return</span> <span class="variable">$query</span>-><span class="function">where</span>(<span class="string">'is_available'</span>, <span class="keyword">true</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">scopeByAuthor</span>(<span class="variable">$query</span>, <span class="variable">$author</span>)
+    {
+        <span class="keyword">return</span> <span class="variable">$query</span>-><span class="function">where</span>(<span class="string">'author'</span>, <span class="variable">$author</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">scopePublishedAfter</span>(<span class="variable">$query</span>, <span class="variable">$year</span>)
+    {
+        <span class="keyword">return</span> <span class="variable">$query</span>-><span class="function">where</span>(<span class="string">'year_published'</span>, <span class="string">'&gt;='</span>, <span class="variable">$year</span>);
+    }
+
+    <span class="comment">//Relaciones con otros modelos</span>
+    <span class="keyword">public function</span> <span class="function">reviews</span>()
+    {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">hasMany</span>(<span class="class">Review</span>::<span class="keyword">class</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">categories</span>()
+    {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">belongsToMany</span>(<span class="class">Category</span>::<span class="keyword">class</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">publisher</span>()
+    {
+        <span class="keyword">return</span> <span class="variable">$this</span>-><span class="function">belongsTo</span>(<span class="class">Publisher</span>::<span class="keyword">class</span>);
+    }
+}</pre>
+    </div>
+
+    <div class="nota">
+        La mayoría de proyectos solo requieren <code>$fillable</code> y <code>$casts</code>.
+    </div>
+
+    <h3>Ejemplos de Uso en el Controlador</h3>
+
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="comment">// Usando scopes</span>
+<span class="variable">$availableBooks</span> = <span class="class">Book</span>::<span class="function">available</span>()-><span class="function">get</span>();
+<span class="variable">$cervantesBooks</span> = <span class="class">Book</span>::<span class="function">byAuthor</span>(<span class="string">'Cervantes'</span>)-><span class="function">get</span>();
+<span class="variable">$modernBooks</span> = <span class="class">Book</span>::<span class="function">publishedAfter</span>(<span class="number">2000</span>)-><span class="function">get</span>();
+
+<span class="comment">// Los campos calculados se incluyen automáticamente en JSON</span>
+<span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">first</span>();
+<span class="function">echo</span> <span class="variable">$book</span>->publication_info; <span class="comment">// "Don Quijote - Cervantes (1605)"</span>
+<span class="function">echo</span> <span class="variable">$book</span>->is_antique;        <span class="comment">// true</span>
+
+<span class="comment">// Los mutadores se ejecutan automáticamente al guardar</span>
+<span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">create</span>([
+    <span class="string">'title'</span> => <span class="string">'EL QUIJOTE'</span>, <span class="comment">// Se guarda como "El quijote"</span>
+    <span class="string">'isbn'</span> => <span class="string">'978-84-376-0494-7'</span> <span class="comment">// Se guarda como "9788437604947"</span>
+]);</pre>
+    </div>
+    <h2>Form Requests</h2>
+
+
+    <h3>Crear los Form Requests</h3>
+    <div class="code">
+        <span class="file-name">Terminal</span>
+        <pre><span class="command">php artisan make:request StoreBookRequest</span>
+<span class="command">php artisan make:request UpdateBookRequest</span></pre>
+    </div>
+
+    <h3>Configurar las Reglas de Validación</h3>
+
+    <h4>StoreBookRequest.php</h4>
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">namespace</span> <span class="class">App\Http\Requests</span>;
+
+<span class="keyword">use</span> <span class="class">Illuminate\Foundation\Http\FormRequest</span>;
+
+<span class="keyword">class</span> <span class="class">StoreBookRequest</span> <span class="keyword">extends</span> <span class="class">FormRequest</span>
+{
+    <span class="comment">/**
+     * Determina si el usuario está autorizado
+     */</span>
+    <span class="keyword">public function</span> <span class="function">authorize</span>(): <span class="keyword">bool</span>
+    {
+        <span class="keyword">return</span> <span class="keyword">true</span>; <span class="comment">// Cambiar a lógica de autorización si es necesario</span>
+    }
+
+    <span class="comment">/**
+     * Reglas de validación para CREAR libros
+     */</span>
+    <span class="keyword">public function</span> <span class="function">rules</span>(): <span class="keyword">array</span>
+    {
+        <span class="keyword">return</span> [
+            <span class="string">'title'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'year'</span> => <span class="string">'required|integer|min:1500|max:'</span> . <span class="function">date</span>(<span class="string">'Y'</span>),
+        ];
+    }
+    
+    <span class="comment">/**
+     * Mensajes de error personalizados (OPCIONAL)
+     */</span>
+    <span class="keyword">public function</span> <span class="function">messages</span>(): <span class="keyword">array</span>
+    {
+        <span class="keyword">return</span> [
+            <span class="string">'title.required'</span> => <span class="string">'El título es obligatorio'</span>,
+            <span class="string">'author.required'</span> => <span class="string">'El autor es obligatorio'</span>,
+            <span class="string">'year.min'</span> => <span class="string">'El año debe ser mayor a 1500'</span>,
+            <span class="string">'year.max'</span> => <span class="string">'El año no puede ser futuro'</span>,
+        ];
+    }
+}</pre>
+    </div>
+
+    <h4>UpdateBookRequest.php</h4>
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">namespace</span> <span class="class">App\Http\Requests</span>;
+
+<span class="keyword">use</span> <span class="class">Illuminate\Foundation\Http\FormRequest</span>;
+
+<span class="keyword">class</span> <span class="class">UpdateBookRequest</span> <span class="keyword">extends</span> <span class="class">FormRequest</span>
+{
+    <span class="comment">/**
+     * Determina si el usuario está autorizado
+     */</span>
+    <span class="keyword">public function</span> <span class="function">authorize</span>(): <span class="keyword">bool</span>
+    {
+        <span class="keyword">return</span> <span class="keyword">true</span>;
+    }
+
+    <span class="comment">/**
+     * Reglas de validación para ACTUALIZAR libros
+     */</span>
+    <span class="keyword">public function</span> <span class="function">rules</span>(): <span class="keyword">array</span>
+    {
+        <span class="keyword">return</span> [
+            <span class="string">'title'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'author'</span> => <span class="string">'required|string|max:255'</span>,
+            <span class="string">'year'</span> => <span class="string">'required|integer|min:1500|max:'</span> . <span class="function">date</span>(<span class="string">'Y'</span>),
+        ];
+    }
+}</pre>
+    </div>
+
+    <h3>Actualizar el Controlador Web</h3>
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">&lt;?php</span>
+
+<span class="keyword">namespace</span> <span class="class">App\Http\Controllers</span>;
+
+<span class="keyword">use</span> <span class="class">App\Models\Book</span>;
+<span class="keyword">use</span> <span class="class">Illuminate\Http\Request</span>;
+<span class="keyword">use</span> <span class="class">App\Http\Requests\StoreBookRequest</span>;
+<span class="keyword">use</span> <span class="class">App\Http\Requests\UpdateBookRequest</span>;
+
+<span class="keyword">class</span> <span class="class">BookWebController</span> <span class="keyword">extends</span> <span class="class">Controller</span>
+{
+    <span class="keyword">public function</span> <span class="function">index</span>()
+    {
+        <span class="variable">$books</span> = <span class="class">Book</span>::<span class="function">all</span>();
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.index'</span>, <span class="function">compact</span>(<span class="string">'books'</span>));
+    }
+
+    <span class="keyword">public function</span> <span class="function">create</span>()
+    {
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.create'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">store</span>(<span class="class">StoreBookRequest</span> <span class="variable">$request</span>)
+    {
+        <span class="class">Book</span>::<span class="function">create</span>(<span class="variable">$request</span>-><span class="function">validated</span>());
+        
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro creado exitosamente!'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">edit</span>(<span class="class">Book</span> <span class="variable">$book</span>)
+    {
+        <span class="keyword">return</span> <span class="function">view</span>(<span class="string">'books.edit'</span>, <span class="function">compact</span>(<span class="string">'book'</span>));
+    }
+
+    <span class="keyword">public function</span> <span class="function">update</span>(<span class="class">UpdateBookRequest</span> <span class="variable">$request</span>, <span class="class">Book</span> <span class="variable">$book</span>)
+    {
+        <span class="variable">$book</span>-><span class="function">update</span>(<span class="variable">$request</span>-><span class="function">validated</span>());
+        
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro actualizado!'</span>);
+    }
+
+    <span class="keyword">public function</span> <span class="function">destroy</span>(<span class="class">Book</span> <span class="variable">$book</span>)
+    {
+        <span class="variable">$book</span>-><span class="function">delete</span>();
+        
+        <span class="keyword">return</span> <span class="function">redirect</span>()-><span class="function">route</span>(<span class="string">'books.index'</span>)
+            -><span class="function">with</span>(<span class="string">'success'</span>, <span class="string">'Libro eliminado!'</span>);
+    }
+}</pre>
+    </div>
+
+
+    <h3>Uso en API Controller</h3>
+    
+    <div class="code">
+        <span class="file-name">PHP</span>
+        <pre><span class="keyword">public function</span> <span class="function">store</span>(<span class="class">StoreBookRequest</span> <span class="variable">$request</span>): <span class="class">JsonResponse</span>
+{
+    <span class="variable">$book</span> = <span class="class">Book</span>::<span class="function">create</span>(<span class="variable">$request</span>-><span class="function">validated</span>());
+
+    <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+        <span class="string">'message'</span> => <span class="string">'Book created successfully'</span>,
+        <span class="string">'book'</span> => <span class="variable">$book</span>
+    ], <span class="number">201</span>);
+}
+
+<span class="keyword">public function</span> <span class="function">update</span>(<span class="class">UpdateBookRequest</span> <span class="variable">$request</span>, <span class="class">Book</span> <span class="variable">$book</span>): <span class="class">JsonResponse</span>
+{
+    <span class="variable">$book</span>-><span class="function">update</span>(<span class="variable">$request</span>-><span class="function">validated</span>());
+
+    <span class="keyword">return</span> <span class="function">response</span>()-><span class="function">json</span>([
+        <span class="string">'message'</span> => <span class="string">'Book updated successfully'</span>,
+        <span class="string">'book'</span> => <span class="variable">$book</span>
+    ]);
+}</pre>
+    </div>
+</div>    
 </div>
 </body>
 
